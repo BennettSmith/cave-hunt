@@ -1,0 +1,11 @@
+# Go build and test artifacts
+/bin/
+/*.test
+/*.out
+/coverage.out
+
+# Local editor and operating-system files
+.DS_Store
+.idea/
+.vscode/
+*.swp
