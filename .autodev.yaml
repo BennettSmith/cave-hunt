@@ -1,0 +1,7 @@
+version: 1
+
+harness:
+  type: opencode
+
+runtime:
+  platform: linux
