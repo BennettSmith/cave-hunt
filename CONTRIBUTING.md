@@ -6,15 +6,16 @@ changing behavior.
 
 ## Workflow
 
-1. Choose one narrowly defined task or roadmap milestone.
-2. State acceptance criteria before implementation when they are not already
+1. Run `make setup` once after cloning to activate the tracked Git hooks.
+2. Choose one narrowly defined task or roadmap milestone.
+3. State acceptance criteria before implementation when they are not already
    explicit.
-3. Add or update tests for observable behavior.
-4. Make the smallest change that satisfies the criteria.
-5. Run formatting, tests, vetting, and the build.
-6. Keep documentation synchronized with intentional interface or behavior
+4. Add or update tests for observable behavior.
+5. Make the smallest change that satisfies the criteria.
+6. Run the repository-owned check.
+7. Keep documentation synchronized with intentional interface or behavior
    changes.
-7. Use a Conventional Commits message when creating a commit.
+8. Use a Conventional Commits message when creating a commit.
 
 Use the standard Go toolchain and avoid third-party dependencies unless a task
 explicitly approves one. Random behavior must be controllable with an explicit
@@ -42,11 +43,11 @@ docs: clarify shooting precedence
 ## Validation
 
 ```sh
-make fmt
-make test
-make vet
-make build
+make check
 ```
+
+Run `make fmt` before the check when formatting needs correction. Changes to
+the OpenCode-specific bypass guard also require `make check-opencode-guard`.
 
 Run the scaffolded executable with:
 

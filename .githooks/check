@@ -1,0 +1,26 @@
+#!/bin/sh
+set -eu
+
+check_format() {
+	unformatted="$(git ls-files -z -- '*.go' | xargs -0 gofmt -l)"
+	if [ -n "$unformatted" ]; then
+		printf 'gofmt required on:\n%s\n' "$unformatted" >&2
+		return 1
+	fi
+}
+
+case "${1:-all}" in
+fmt)
+	check_format
+	;;
+all)
+	check_format
+	go test ./...
+	go vet ./...
+	go build ./...
+	;;
+*)
+	printf 'usage: %s [fmt]\n' "$0" >&2
+	exit 2
+	;;
+esac

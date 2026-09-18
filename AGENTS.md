@@ -35,17 +35,19 @@ assigned task.
 11. Do not commit unless the task explicitly requests a commit. When creating a
     commit, its message must follow Conventional Commits using the form
     `<type>[optional scope][!]: <description>`.
+12. Create commits with ordinary `git commit` so repository hooks run. Never
+    pass `--no-verify`, `-n`, a combined short form containing `-n`, or override
+    `core.hooksPath`.
 
 ## Required checks
 
-Run these commands before declaring a Go change complete:
+Run the repository-owned gate before declaring a change complete or creating a
+commit:
 
 ```sh
-make fmt
-make test
-make vet
-make build
+make check
 ```
 
-Also run any narrower test commands relevant to the changed package. Report
-commands that could not be run and why.
+Use `make fmt` to update formatting before rerunning the gate. Also run any
+narrower test commands relevant to the changed package. Report commands that
+could not be run and why.
