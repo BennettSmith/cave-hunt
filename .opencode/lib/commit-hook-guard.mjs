@@ -8,13 +8,31 @@ const gitOptionsWithValues = new Set([
   "--config-env",
 ])
 const commitShortOptionsWithValues = new Set(["C", "c", "F", "m", "t", "S", "u"])
+const configReadActions = new Set(["--get", "--get-all"])
+const configReadModifiers = new Set([
+  "--fixed-value",
+  "--global",
+  "--includes",
+  "--local",
+  "--no-includes",
+  "--null",
+  "--show-origin",
+  "--show-scope",
+  "--system",
+  "--worktree",
+  "-z",
+])
 
 export function commitHookBypassReason(command) {
   for (const words of shellCommands(tokenizeShell(command))) {
     const git = gitInvocation(words)
     if (!git) continue
 
-    if (git.subcommand === "config" && mentionsHooksPath(git.arguments)) {
+    if (
+      git.subcommand === "config" &&
+      mentionsHooksPath(git.arguments) &&
+      !isReadOnlyHooksPathQuery(git.arguments)
+    ) {
       return "changing core.hooksPath is not allowed"
     }
     if (git.subcommand !== "commit") continue
@@ -150,6 +168,28 @@ function mentionsHooksPath(arguments_) {
   return arguments_.some((argument) =>
     argument.toLowerCase().replace(/[^a-z.]/g, "").includes("core.hookspath"),
   )
+}
+
+function isReadOnlyHooksPathQuery(arguments_) {
+  let action = ""
+  let keys = 0
+  for (const argument of arguments_) {
+    const normalized = argument.toLowerCase()
+    if (configReadModifiers.has(normalized) || normalized.startsWith("--type=")) {
+      continue
+    }
+    if (configReadActions.has(normalized)) {
+      if (action) return false
+      action = normalized
+      continue
+    }
+    if (normalized === "core.hookspath") {
+      keys += 1
+      continue
+    }
+    return false
+  }
+  return keys === 1
 }
 
 function isHooksPathSetting(value) {

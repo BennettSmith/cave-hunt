@@ -18,6 +18,10 @@ const rejected = [
   "git -c core.hooksPath=/dev/null commit -m 'skip hooks'",
   "git -ccore.hooksPath=/dev/null commit -m 'skip hooks'",
   "git config --local core.hooksPath /dev/null",
+  "git config --unset core.hooksPath",
+  "git config --unset-all core.hooksPath",
+  "git config --replace-all core.hooksPath /dev/null",
+  "git config --add core.hooksPath /dev/null",
 ]
 
 for (const command of rejected) {
@@ -31,6 +35,12 @@ const allowed = [
   "git commit -am 'fix: update notes'",
   "git commit -mnotes",
   "git status --porcelain",
+  "git config core.hooksPath",
+  "git config --get core.hooksPath",
+  "git config --local --get core.hooksPath",
+  "git config --get-all core.hooksPath",
+  "git config --show-origin --get core.hooksPath",
+  "git config --show-scope --get core.hooksPath",
   "printf '%s' 'git commit --no-verify'",
   "go test ./...",
 ]
